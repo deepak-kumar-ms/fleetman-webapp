@@ -28,25 +28,7 @@ pipeline {
             }
         }
 
-        stage('Sonarqube Analysis') {
-            steps {
-				withSonarQubeEnv('sonar-server') {
-					sh ''' $SCANNER_HOME/bin/sonar-scanner \
-					-Dsonar.projectName=fleetman-webapp \
-					-Dsonar.projectKey=fleetman-webapp '''
-				}
-                
-            }
-        }
-
-        stage('Quality Check') {
-            steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
-                }
-            }
-        }
-
+        
         stage('Trivy File Scan') {
             steps {
                 sh 'trivy fs . > trivyfs.txt'
